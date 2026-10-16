@@ -292,20 +292,28 @@ def build_emblem():
 # ---------------------------------------------------------------------------
 
 def build_leaders():
+    # v2: Троцкий УДАЛЁН из темы; вместо него — К. Маркс и Ф. Энгельс
+    # (реальное фото пользователя assets/sources/marks.jpg).
+    mk = os.path.join(SRC, "marks.jpg")
+    if os.path.exists(mk):
+        full = load_rgb(mk)
+        w, h = full.size
+        marx = full.crop((int(w * 0.50), 0, w, h))
+        eng = full.crop((0, 0, int(w * 0.52), h))
+        make_medallion(marx, os.path.join(THEME, "leader-marx.png"),
+                       size=512, label="К. МАРКС", sublabel="1818 — 1883")
+        make_medallion(eng, os.path.join(THEME, "leader-engels.png"),
+                       size=512, label="Ф. ЭНГЕЛЬС", sublabel="1820 — 1895")
     make_medallion(os.path.join(SRC, "lenin.jpg"),
                    os.path.join(THEME, "leader-lenin.png"),
                    size=512, label="В. И. ЛЕНИН", sublabel="1870 — 1924")
     make_medallion(os.path.join(SRC, "stalin.webp"),
                    os.path.join(THEME, "leader-stalin.png"),
                    size=512, label="И. В. СТАЛИН", sublabel="вождь народов")
-    # Троцкий: фото в набор пользователя не входило — генерируем силуэт-заглушку,
-    # который пользователь может заменить, положив файл assets/sources/trotsky.jpg
-    tro = os.path.join(SRC, "trotsky.jpg")
+    tro = os.path.join(THEME, "leader-trotsky.png")
     if os.path.exists(tro):
-        make_medallion(tro, os.path.join(THEME, "leader-trotsky.png"),
-                       size=512, label="Л. Д. ТРОЦКИЙ", sublabel="1879 — 1940")
-    else:
-        _trotsky_fallback(os.path.join(THEME, "leader-trotsky.png"))
+        os.remove(tro)
+        print("[rm ] theme/leader-trotsky.png (Троцкий убран)")
 
 
 def _trotsky_fallback(out_path):
@@ -495,7 +503,10 @@ def build_background(emblem):
 
     paste_medal("leader-stalin.png", (820, 300, 1100, 580))
     paste_medal("leader-lenin.png", (330, 560, 560, 790))
-    paste_medal("leader-trotsky.png", (1360, 560, 1590, 790))
+    for nm, box in (("leader-marx.png", (1360, 560, 1590, 790)),):
+        pth = os.path.join(THEME, nm)
+        if os.path.exists(pth):
+            paste_medal(nm, box)
 
     # ГЕРБ СССР — крупно в правом верхнем углу (полупрозрачно, как водяной знак)
     e = emblem.copy()
