@@ -24,10 +24,21 @@ desktop-image: "background.png"
 #   grub-mkfont -o fonts/dejavu-sans-16.pf2 --size=16 /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 # ---------------------------------------------------------------------------
 
-+ global_theme {
-    font = "fonts/dejavu-sans-16.pf2"
-    terminal-font = "fonts/dejavu-sans-16.pf2"
-}
+# (блок global_theme не входит в официальный синтаксис GRUB — удалён;
+#  шрифт задаётся в каждом компоненте отдельно)
+
+# ---------------------------------------------------------------------------
+# АССЕТЫ: реальные фото и официальный герб
+#   background.png        — карта СССР + портреты Ленина/Сталина/Троцкого
+#                           (дуотонная плакатная обработка) + герб СССР
+#   emblem.png            — Госгерб СССР 1956–1991 (Wikimedia Commons)
+#   leader-lenin.png      — В. И. Ленин (фото, ч/б → красный дуотон)
+#   leader-stalin.png     — И. В. Сталин (фото → золото/красный дуотон)
+#   leader-trotsky.png    — Л. Д. Троцкий (заглушка; замените своим фото,
+#                           см. scripts/photomontage.py и README.md)
+# Исходники лежат в assets/sources/, пересборка:
+#   python3 scripts/photomontage.py
+# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # ЗАГОЛОВОК («шапка плаката»)
@@ -36,7 +47,9 @@ desktop-image: "background.png"
     text = "Arch Linux / Манжаро · Власть Советам!"
     color = "#FFD700"
     font = "fonts/dejavu-sans-18.pf2"
+    # иконки заголовка — официальный Государственный герб СССР (1956–1991)
     icons_on = "icons/emblem-64.png"
+    icons_off = "icons/emblem-64.png"
     align = "center"
     top = 2%
     left = 0
